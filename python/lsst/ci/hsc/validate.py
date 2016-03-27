@@ -1,6 +1,6 @@
 __all__ = ["RawValidation", "DetrendValidation", "SfmValidation", "SkymapValidation", "WarpValidation",
            "CoaddValidation", "DetectionValidation", "MergeDetectionsValidation", "MeasureValidation",
-           "MergeMeasurementsValidation", "ForcedValidation",]
+           "MergeMeasurementsValidation", "ForcedValidation", ]
 
 import os
 import functools
@@ -8,6 +8,8 @@ from lsst.pex.logging import getDefaultLog
 from lsst.daf.persistence import Butler
 
 _butler = {}
+
+
 def getButler(root):
     if not root in _butler:
         _butler[root] = Butler(root)
@@ -15,12 +17,12 @@ def getButler(root):
 
 
 class Validation(object):
-    _datasets = [] # List of datasets to check we can read
-    _files = [] # List of datasets to check that file exists
-    _sourceDataset = None # Dataset name of source catalog
-    _minSources = 100 # Minimum number of sources
-    _matchDataset = None # Dataset name of matches
-    _minMatches = 10 # Minimum number of matches
+    _datasets = []  # List of datasets to check we can read
+    _files = []  # List of datasets to check that file exists
+    _sourceDataset = None  # Dataset name of source catalog
+    _minSources = 100  # Minimum number of sources
+    _matchDataset = None  # Dataset name of matches
+    _minMatches = 10  # Minimum number of matches
     _butler = {}
 
     def __init__(self, root, log=None):
@@ -117,8 +119,10 @@ class Validation(object):
 class RawValidation(Validation):
     _datasets = ["raw"]
 
+
 class DetrendValidation(Validation):
     _datasets = ["bias", "dark", "flat"]
+
 
 class SfmValidation(Validation):
     _datasets = ["processCcd_config", "processCcd_metadata", "calexp", "calexpBackground",
@@ -126,31 +130,39 @@ class SfmValidation(Validation):
     _sourceDataset = "src"
     _matchDatasets = ["icMatch", "srcMatch"]
 
+
 class SkymapValidation(Validation):
     _datasets = ["deepCoadd_skyMap"]
+
 
 class WarpValidation(Validation):
     _datasets = ["deepCoadd_tempExp", "deep_makeCoaddTempExp_config", "deep_makeCoaddTempExp_metadata"]
 
+
 class CoaddValidation(Validation):
     _datasets = ["deepCoadd", "deep_assembleCoadd_config", "deep_assembleCoadd_metadata"]
+
 
 class DetectionValidation(Validation):
     _datasets = ["deepCoadd_det_schema", "detectCoaddSources_config", "detectCoaddSources_metadata"]
     _sourceDataset = "deepCoadd_det"
 
+
 class MergeDetectionsValidation(Validation):
     _datasets = ["mergeCoaddDetections_config", "deepCoadd_mergeDet_schema"]
     _sourceDataset = "deepCoadd_mergeDet"
+
 
 class MeasureValidation(Validation):
     _datasets = ["measureCoaddSources_config", "measureCoaddSources_metadata", "deepCoadd_meas_schema"]
     _sourceDataset = "deepCoadd_meas"
     _matchDataset = "deepCoadd_srcMatch"
 
+
 class MergeMeasurementsValidation(Validation):
     _datasets = ["mergeCoaddMeasurements_config", "deepCoadd_ref_schema"]
     _sourceDataset = "deepCoadd_ref"
+
 
 class ForcedValidation(Validation):
     _datasets = ["deepCoadd_forced_src_schema", "deepCoadd_forced_config", "deepCoadd_forced_metadata"]
